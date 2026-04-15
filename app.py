@@ -1585,22 +1585,29 @@ def render_quiz(topic_name):
                 unsafe_allow_html=True,
             )
         else:
+            # Use index=None so no option is pre-selected by default;
+            # restore the saved selection only if the student had already chosen one.
+            saved_idx = st.session_state.quiz_answers.get(state_key)
             chosen = st.radio(
                 f"q_{topic_name}_{q_idx}",
                 options=q["opts"],
-                index=st.session_state.quiz_answers.get(state_key, 0),
+                index=saved_idx,  # None = no pre-selection; int = restore prior answer
                 key=f"quiz_radio_{topic_name}_{q_idx}",
                 label_visibility="collapsed",
             )
-            chosen_idx = q["opts"].index(chosen)
-            if st.button("Submit Answer", key=f"quiz_submit_{topic_name}_{q_idx}"):
-                if not st.session_state.quiz_submitted.get(state_key, False):
-                    st.session_state.quiz_answers[state_key]   = chosen_idx
-                    st.session_state.quiz_submitted[state_key] = True
-                    st.session_state.quiz_total += 1
-                    if chosen_idx == q["ans"]:
-                        st.session_state.quiz_score += 1
-                st.rerun()
+            if chosen is None:
+                st.caption("⬆️ Select an answer above before submitting.")
+                st.button("Submit Answer", key=f"quiz_submit_{topic_name}_{q_idx}", disabled=True)
+            else:
+                chosen_idx = q["opts"].index(chosen)
+                if st.button("Submit Answer", key=f"quiz_submit_{topic_name}_{q_idx}"):
+                    if not st.session_state.quiz_submitted.get(state_key, False):
+                        st.session_state.quiz_answers[state_key]   = chosen_idx
+                        st.session_state.quiz_submitted[state_key] = True
+                        st.session_state.quiz_total += 1
+                        if chosen_idx == q["ans"]:
+                            st.session_state.quiz_score += 1
+                    st.rerun()
 
     # Reset button for this topic
     if answered == len(questions):
@@ -1663,16 +1670,14 @@ def page_learn():
     slide = slides[st.session_state.learn_slide]
 
     # ── Slide Title ─────────────────────────────────────────────────────────
-    fs = "1.08rem"
+    # fs variable removed — font size is already applied globally via CSS
     st.markdown(f'<div style="font-family:Space Mono,monospace;font-size:2rem;color:{TEXT_LIGHT};border-bottom:2px solid {ACCENT};padding-bottom:8px;margin-bottom:16px">{slide["title"]}</div>', unsafe_allow_html=True)
 
     # ── Main two-column layout ──────────────────────────────────────────────
     col_main, col_side = st.columns([2, 1])
 
     with col_main:
-        st.markdown(f'<div style="font-size:{fs}">', unsafe_allow_html=True)
         st.markdown(slide["content"])
-        st.markdown('</div>', unsafe_allow_html=True)
 
         # Formula
         if slide.get("formula"):
@@ -1682,7 +1687,7 @@ def page_learn():
         if slide.get("bullets"):
             st.markdown(f'<b style="color:{ACCENT}">Key Takeaways:</b>', unsafe_allow_html=True)
             for b in slide["bullets"]:
-                st.markdown(f'<div style="font-size:{fs};padding:2px 0">▸ {b}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="padding:2px 0">▸ {b}</div>', unsafe_allow_html=True)
 
     with col_side:
         # Analogy box
@@ -1965,8 +1970,9 @@ def page_cpu():
             pid_finish = {}
             for pid, s, e in tl:
                 if e > pid_finish.get(pid, 0): pid_finish[pid] = e
+            # Fallback: use at + bt (not 0) so TAT is never negative for unseen pids
             rows = [(processes[i][0], processes[i][1], processes[i][2],
-                     pid_finish.get(processes[i][0], 0)) for i in range(len(processes))]
+                     pid_finish.get(processes[i][0], processes[i][1] + processes[i][2])) for i in range(len(processes))]
             comp_wt[algo_name]  = round(sum(wt) / len(wt), 2)
             comp_tat[algo_name] = round(sum(r[3] - r[1] for r in rows) / len(rows), 2)
 
@@ -2220,9 +2226,9 @@ def disk_sstf(requests, head):
     return order, seek
 
 def disk_scan(requests, head, disk_size=200):
-    # r < head (strict): head position itself needs no movement
+    # r < head (strict): head position itself needs no movement, avoids redundant entry
     left  = sorted([r for r in requests if r < head], reverse=True)
-    right = sorted([r for r in requests if r >= head])
+    right = sorted([r for r in requests if r > head])
     order = right + [disk_size-1] + left
     path  = [head] + order
     seek  = sum(abs(path[i+1]-path[i]) for i in range(len(path)-1))
@@ -2238,7 +2244,8 @@ def disk_cscan(requests, head, disk_size=200):
     return order, seek
 
 def disk_look(requests, head):
-    left  = sorted([r for r in requests if r <= head], reverse=True)
+    # r < head (strict): head position itself needs no movement
+    left  = sorted([r for r in requests if r < head], reverse=True)
     right = sorted([r for r in requests if r > head])
     order = right + left
     path  = [head] + order
@@ -2473,7 +2480,8 @@ def page_monitor():
                 "Mem %": round(p.info['memory_percent'] or 0, 2),
                 "Threads": p.info.get('num_threads', '?'),
             })
-        except: pass
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
 
     df_procs = pd.DataFrame(procs_data).sort_values("CPU %", ascending=False).head(20)
     st.dataframe(df_procs, use_container_width=True, hide_index=True)
@@ -2508,7 +2516,8 @@ def page_monitor():
                                "Used (GB)":  round(usage.used/1e9, 1),
                                "Free (GB)":  round(usage.free/1e9, 1),
                                "Usage %":    usage.percent})
-        except: pass
+        except (PermissionError, OSError):
+            pass
     if disk_info:
         st.dataframe(pd.DataFrame(disk_info), use_container_width=True, hide_index=True)
 
