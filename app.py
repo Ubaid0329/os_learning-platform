@@ -403,7 +403,7 @@ User Applications
         "bullets": ["Multiprogramming ≠ multitasking — there is no time-sharing", "OS must decide which job runs next → early scheduling", "Memory must hold multiple jobs → memory management needed"],
         "analogy": "Batch = cooking one dish at a time. Multiprogramming = starting the rice, then chopping vegetables while it cooks. CPU is always busy!",
         "formula": None,
-        "teacher_note": "Ask: 'If Job A needs 10ms CPU then 50ms I/O, what does CPU do in Batch vs Multiprogramming?' Use a timeline to show CPU utilization improvement.",
+        "teacher_note": "Use an example where Job A requires 10 ms of CPU time followed by 50 ms of I/O. Explain how, in Batch Processing, the CPU remains idle during the I/O phase, whereas in Multiprogramming, the CPU switches to another job. Draw a timeline to highlight the improvement in CPU utilization."
         "mistakes": ["Saying multiprogramming means multitasking — it doesn't preempt", "Thinking batch OS is completely useless — still used for payroll, billing"],
         "simulator": None },
 
@@ -434,7 +434,7 @@ User Applications
         "bullets": ["Time-sharing adds user interactivity that multiprogramming lacks", "RTOS correctness = right answer + delivered on time", "Distributed OS handles consistency, fault tolerance, and communication"],
         "analogy": "Time-sharing = a teacher taking 30 questions from students round-robin. RTOS = 911 dispatcher — must respond within seconds, no excuses.",
         "formula": None,
-        "teacher_note": "Show where each type is used in real life. Ask: 'Your ATM — which type of OS?' (Embedded/RTOS). 'Your laptop?' (Time-sharing). This grounds abstract theory.",
+        "teacher_note": "Show where each type is used in real life. Ask: 'Your ATM — which type of OS?' (Embedded/RTOS). 'Your laptop?' (Time-sharing). This grounds abstract theory,"
         "mistakes": ["Thinking real-time means fast — it means predictable/guaranteed", "Confusing distributed OS with networked OS (distributed = transparent)"],
         "simulator": None },
     ]
@@ -473,7 +473,7 @@ A **system call** is how a user program requests a service from the OS kernel.
         "bullets": ["Each system call has a unique number (e.g., read=0, write=1 on x86-64 Linux)", "System calls are expensive — minimize them in performance-critical code", "strace command shows all system calls made by a program"],
         "analogy": "System call = asking a bank teller (OS) to access your safe (hardware). You can't go into the vault yourself — you fill out a form (registers), show ID, and the teller does it.",
         "formula": None,
-        "teacher_note": "Run `strace ls` in terminal during lecture. Students are amazed to see ~100 system calls just to list a directory. Ask: 'Why so many calls for a simple `ls`?'",
+        "teacher_note": "During the lecture, run strace ls in the terminal. Highlight that listing a simple directory involves around 100 system calls. Ask students: “Why does such a simple command require so many system calls?” to encourage curiosity and discussion."
         "mistakes": ["Thinking function calls and system calls are the same", "Not knowing that printf eventually calls the `write` system call"],
         "simulator": None },
 
