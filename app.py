@@ -434,7 +434,7 @@ User Applications
         "bullets": ["Time-sharing adds user interactivity that multiprogramming lacks", "RTOS correctness = right answer + delivered on time", "Distributed OS handles consistency, fault tolerance, and communication"],
         "analogy": "Time-sharing = a teacher taking 30 questions from students round-robin. RTOS = 911 dispatcher — must respond within seconds, no excuses.",
         "formula": None,
-        "teacher_note": "Show where each type is used in real life. Ask: 'Your ATM — which type of OS?' (Embedded/RTOS). 'Your laptop?' (Time-sharing). This grounds abstract theory,"
+        "teacher_note": "Show where each type is used in real life. Ask: 'Your ATM — which type of OS?' (Embedded/RTOS). 'Your laptop?' (Time-sharing). This grounds abstract theory,",
         "mistakes": ["Thinking real-time means fast — it means predictable/guaranteed", "Confusing distributed OS with networked OS (distributed = transparent)"],
         "simulator": None },
     ]
