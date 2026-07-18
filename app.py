@@ -403,7 +403,7 @@ User Applications
         "bullets": ["Multiprogramming ≠ multitasking — there is no time-sharing", "OS must decide which job runs next → early scheduling", "Memory must hold multiple jobs → memory management needed"],
         "analogy": "Batch = cooking one dish at a time. Multiprogramming = starting the rice, then chopping vegetables while it cooks. CPU is always busy!",
         "formula": None,
-        "teacher_note": "Use an example where Job A requires 10 ms of CPU time followed by 50 ms of I/O. Explain how, in Batch Processing, the CPU remains idle during the I/O phase, whereas in Multiprogramming, the CPU switches to another job. Draw a timeline to highlight the improvement in CPU utilization."
+        "teacher_note": "Use an example where Job A requires 10 ms of CPU time followed by 50 ms of I/O. Explain how, in Batch Processing, the CPU remains idle during the I/O phase, whereas in Multiprogramming, the CPU switches to another job. Draw a timeline to highlight the improvement in CPU utilization.",
         "mistakes": ["Saying multiprogramming means multitasking — it doesn't preempt", "Thinking batch OS is completely useless — still used for payroll, billing"],
         "simulator": None },
 
