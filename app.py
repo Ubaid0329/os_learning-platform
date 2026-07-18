@@ -473,7 +473,7 @@ A **system call** is how a user program requests a service from the OS kernel.
         "bullets": ["Each system call has a unique number (e.g., read=0, write=1 on x86-64 Linux)", "System calls are expensive — minimize them in performance-critical code", "strace command shows all system calls made by a program"],
         "analogy": "System call = asking a bank teller (OS) to access your safe (hardware). You can't go into the vault yourself — you fill out a form (registers), show ID, and the teller does it.",
         "formula": None,
-        "teacher_note": "During the lecture, run strace ls in the terminal. Highlight that listing a simple directory involves around 100 system calls. Ask students: “Why does such a simple command require so many system calls?” to encourage curiosity and discussion."
+        "teacher_note": "During the lecture, run strace ls in the terminal. Highlight that listing a simple directory involves around 100 system calls. Ask students: “Why does such a simple command require so many system calls?” to encourage curiosity and discussion.",
         "mistakes": ["Thinking function calls and system calls are the same", "Not knowing that printf eventually calls the `write` system call"],
         "simulator": None },
 
